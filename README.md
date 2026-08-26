@@ -3,7 +3,7 @@
 Predicting a chess player's rating from their playing style alone — no
 game outcome required, just how they play.
 
-**[Live demo →](#) &nbsp;|&nbsp; [Skip to results](#results)**
+**[Live demo →](https://chess-elo-predictor-3zgjrskctcc5se5vogymxb.streamlit.app/) &nbsp;|&nbsp; [Skip to results](#results)**
 
 ---
 
