@@ -1,0 +1,10 @@
+pandas
+numpy
+python-chess
+requests
+zstandard
+scikit-learn
+shap
+matplotlib
+joblib
+streamlit
