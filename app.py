@@ -8,6 +8,7 @@ Run with (NOT python app.py):
 """
 
 import io
+import os
 import re
 import time
 
@@ -19,9 +20,13 @@ import pandas as pd
 import requests
 import streamlit as st
 
-STOCKFISH_PATH = (
+_LOCAL_WINDOWS_PATH = (
     r"stockfish-windows-x86-64-avx2\stockfish\stockfish-windows-x86-64-avx2.exe"
 )
+# On Streamlit Cloud (Linux), Stockfish is installed via packages.txt and is
+# available as a plain command on PATH. Locally on Windows, we use the
+# downloaded exe instead. Check which one actually exists at startup.
+STOCKFISH_PATH = _LOCAL_WINDOWS_PATH if os.path.exists(_LOCAL_WINDOWS_PATH) else "stockfish"
 MODEL_FILE = "elo_model.joblib"
 ANALYSIS_DEPTH = 12
 MAX_GAMES = 4
