@@ -10,6 +10,7 @@ Run with (NOT python app.py):
 import io
 import os
 import re
+import shutil
 import time
 
 import chess
@@ -23,10 +24,27 @@ import streamlit as st
 _LOCAL_WINDOWS_PATH = (
     r"stockfish-windows-x86-64-avx2\stockfish\stockfish-windows-x86-64-avx2.exe"
 )
-# On Streamlit Cloud (Linux), Stockfish is installed via packages.txt and is
-# available as a plain command on PATH. Locally on Windows, we use the
-# downloaded exe instead. Check which one actually exists at startup.
-STOCKFISH_PATH = _LOCAL_WINDOWS_PATH if os.path.exists(_LOCAL_WINDOWS_PATH) else "stockfish"
+# Common locations for the apt-installed Stockfish binary on Debian/Ubuntu
+# (Streamlit Cloud). /usr/games in particular is where the "stockfish"
+# apt package installs to, but that folder isn't always on the PATH used
+# by background app processes, so we check these explicitly rather than
+# just calling the bare "stockfish" command.
+_LINUX_CANDIDATES = ["/usr/games/stockfish", "/usr/bin/stockfish", "/usr/local/bin/stockfish"]
+
+
+def _find_stockfish_path():
+    if os.path.exists(_LOCAL_WINDOWS_PATH):
+        return _LOCAL_WINDOWS_PATH
+    for candidate in _LINUX_CANDIDATES:
+        if os.path.exists(candidate):
+            return candidate
+    found_on_path = shutil.which("stockfish")
+    if found_on_path:
+        return found_on_path
+    return "stockfish"  # last resort -- will raise a clear error if truly missing
+
+
+STOCKFISH_PATH = _find_stockfish_path()
 MODEL_FILE = "elo_model.joblib"
 ANALYSIS_DEPTH = 12
 MAX_GAMES = 4
